@@ -1,106 +1,74 @@
-CREATE TABLE employees (
-    emp_no INT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    sex CHAR(1),
-    birth_date DATE,
-    hire_date DATE
-);
+Background
+It’s been two weeks since you were hired as a new data engineer at Pewlett Hackard (a fictional company). Your first major task is to do a research project about people whom the company employed during the 1980s and 1990s. All that remains of the employee database from that period are six CSV files.
 
-CREATE TABLE departments (
-    dept_no CHAR(4) PRIMARY KEY,
-    dept_name VARCHAR(50) NOT NULL
-);
+For this project, you’ll design the tables to hold the data from the CSV files, import the CSV files into a SQL database, and then answer questions about the data. That is, you’ll perform data modeling, data engineering, and data analysis, respectively.
 
-CREATE TABLE dept_emp (
-    emp_no INT,
-    dept_no CHAR(4),
-    from_date DATE,
-    to_date DATE,
-    PRIMARY KEY (emp_no, dept_no),
-    FOREIGN KEY (emp_no) REFERENCES employees(emp_no),
-    FOREIGN KEY (dept_no) REFERENCES departments(dept_no)
-);
+Before You Begin
+Create a new repository for this project called sql-challenge. Do not add this assignment to an existing repository.
 
-CREATE TABLE dept_manager (
-    emp_no INT,
-    dept_no CHAR(4),
-    from_date DATE,
-    to_date DATE,
-    PRIMARY KEY (emp_no, dept_no),
-    FOREIGN KEY (emp_no) REFERENCES employees(emp_no),
-    FOREIGN KEY (dept_no) REFERENCES departments(dept_no)
-);
+Clone the new repository to your computer.
 
-CREATE TABLE salaries (
-    emp_no INT,
-    salary INT,
-    from_date DATE,
-    to_date DATE,
-    PRIMARY KEY (emp_no, from_date),
-    FOREIGN KEY (emp_no) REFERENCES employees(emp_no)
-);
+Inside your local Git repository, create a directory for this Challenge. Use a folder name that corresponds to the Challenge, such as EmployeeSQL.
 
-CREATE TABLE titles (
-    emp_no INT,
-    title VARCHAR(50),
-    from_date DATE,
-    to_date DATE,
-    PRIMARY KEY (emp_no, title, from_date),
-    FOREIGN KEY (emp_no) REFERENCES employees(emp_no)
-);
+Note that you’ll add your files to this folder and push the changes to GitHub.
 
+Files
+Download the following files to help you get started:
 
-COPY employees FROM '/path/to/employees.csv' DELIMITER ',' CSV HEADER;
-COPY departments FROM '/path/to/departments.csv' DELIMITER ',' CSV HEADER;
-COPY dept_emp FROM '/path/to/dept_emp.csv' DELIMITER ',' CSV HEADER;
-COPY dept_manager FROM '/path/to/dept_manager.csv' DELIMITER ',' CSV HEADER;
-COPY salaries FROM '/path/to/salaries.csv' DELIMITER ',' CSV HEADER;
-COPY titles FROM '/path/to/titles.csv' DELIMITER ',' CSV HEADER;
+Module 9 Challenge filesLinks to an external site.
 
+Instructions
+This Challenge is divided into three parts: data modeling, data engineering, and data analysis.
 
-SELECT emp_no, last_name, first_name, sex, salary
-FROM employees
-JOIN salaries ON employees.emp_no = salaries.emp_no;
+Data Modeling
+Inspect the CSV files, and then sketch an Entity Relationship Diagram of the tables. To create the sketch, feel free to use a tool like QuickDBDLinks to an external site..
 
+Data Engineering
+Use the provided information to create a table schema for each of the six CSV files. Be sure to do the following:
 
-SELECT first_name, last_name, hire_date
-FROM employees
-WHERE EXTRACT(YEAR FROM hire_date) = 1986;
+Remember to specify the data types, primary keys, foreign keys, and other constraints.
 
+For the primary keys, verify that the column is unique. Otherwise, create a composite keyLinks to an external site., which takes two primary keys to uniquely identify a row.
 
-SELECT dept_manager.dept_no, departments.dept_name, dept_manager.emp_no, employees.last_name, employees.first_name
-FROM dept_manager
-JOIN departments ON dept_manager.dept_no = departments.dept_no
-JOIN employees ON dept_manager.emp_no = employees.emp_no;
+Be sure to create the tables in the correct order to handle the foreign keys.
 
+Import each CSV file into its corresponding SQL table.
 
-SELECT dept_emp.dept_no, dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
-FROM dept_emp
-JOIN employees ON dept_emp.emp_no = employees.emp_no
-JOIN departments ON dept_emp.dept_no = departments.dept_no;
+hint
+Data Analysis
+List the employee number, last name, first name, sex, and salary of each employee.
 
+List the first name, last name, and hire date for the employees who were hired in 1986.
 
-SELECT first_name, last_name, sex
-FROM employees
-WHERE first_name = 'Hercules' AND last_name LIKE 'B%';
+List the manager of each department along with their department number, department name, employee number, last name, and first name.
 
+List the department number for each employee along with that employee’s employee number, last name, first name, and department name.
 
-SELECT dept_emp.emp_no, employees.last_name, employees.first_name
-FROM dept_emp
-JOIN employees ON dept_emp.emp_no = employees.emp_no
-JOIN departments ON dept_emp.dept_no = departments.dept_no
-WHERE departments.dept_name = 'Sales';
+List first name, last name, and sex of each employee whose first name is Hercules and whose last name begins with the letter B.
 
+List each employee in the Sales department, including their employee number, last name, and first name.
 
-SELECT dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
-FROM dept_emp
-JOIN employees ON dept_emp.emp_no = employees.emp_no
-JOIN departments ON dept_emp.dept_no = departments.dept_no
-WHERE departments.dept_name IN ('Sales', 'Development');
+List each employee in the Sales and Development departments, including their employee number, last name, first name, and department name.
 
+List the frequency counts, in descending order, of all the employee last names (that is, how many employees share each last name).
 
-SELECT last_name, COUNT(*) AS name_count
-FROM employees
-GROUP BY last_name
-ORDER BY name_count DESC;
+Requirements
+Data Modeling (10 points)
+Entity Relationship Diagram is included or table schemas provided for all tables (10 points)
+Data Engineering (70 points)
+All required columns are defined for each table (10 points)
+Columns are set to the correct data type (10 points)
+Primary Keys set for each table (10 points)
+Correctly references related tables (10 points)
+Tables are correctly related using Foreign Keys (10 points)
+Correctly uses NOT NULL condition on necessary columns (10 points)
+Accurately defines value length for columns (10 points)
+Data Analysis (20 points)
+List the employee number, last name, first name, sex, and salary of each employee (2 points)
+List the first name, last name, and hire date for the employees who were hired in 1986 (2 points)
+List the manager of each department along with their department number, department name, employee number, last name, and first name (2 points)
+List the department number for each employee along with that employee’s employee number, last name, first name, and department name (2 points)
+List first name, last name, and sex of each employee whose first name is Hercules and whose last name begins with the letter B (2 points)
+List each employee in the Sales department, including their employee number, last name, and first name (2 points)
+List each employee in the Sales and Development departments, including their employee number, last name, first name, and department name (4 points)
+List the frequency counts, in descending order, of all the employee last names (that is, how many employees share each last name) (4 points)
